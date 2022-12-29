@@ -2,10 +2,8 @@ package com.zaiats.catcher.controller;
 
 import com.zaiats.catcher.service.CandidateService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,8 +19,15 @@ public class CandidateController {
         return candidateService.getCandidateCollection();
     }
 
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public String createCandidate(@RequestBody String candidate) {
+        candidateService.addNewCandidate(candidate);
+        return candidate;
+    }
+
     @DeleteMapping
-    public void removeFirst(){
+    public void removeFirst() {
         candidateService.removeFirst();
     }
 

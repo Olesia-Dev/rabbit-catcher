@@ -22,6 +22,10 @@ public class CandidateService {
         return this.candidateCollection;
     }
 
+    public void addNewCandidate(String candidate) {
+        candidateCollection.add(candidate);
+    }
+
     public void removeFirst() {
         candidateCollection.remove(0);
     }
