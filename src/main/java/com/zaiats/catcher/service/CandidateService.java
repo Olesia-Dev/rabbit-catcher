@@ -2,32 +2,40 @@ package com.zaiats.catcher.service;
 
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class CandidateService {
 
-    private List<String> candidateCollection = new ArrayList<>();
+    private static Integer sequentialId = 1;
+    private static Map<Integer, String> idToCandidateCollection = new HashMap<>();
 
     public CandidateService() {
         initMockData();
     }
 
     private void initMockData() {
-        candidateCollection.addAll(List.of("Alex Bip", "Igor Papka", "Iryna Chek"));
+        idToCandidateCollection.putAll(Map.of(
+                getNextId(), "Alex Bip",
+                getNextId(), "Igor Papka",
+                getNextId(), "Iryna Chek"));
     }
 
-    public List<String> getCandidateCollection() {
-        return this.candidateCollection;
+    public Map<Integer, String> getIdToCandidateCollection() {
+        return idToCandidateCollection;
     }
 
     public void addNewCandidate(String candidate) {
-        candidateCollection.add(candidate);
+        idToCandidateCollection.put(getNextId(), candidate);
     }
 
-    public void removeFirst() {
-        candidateCollection.remove(0);
+    public void removeById(Integer id) {
+        idToCandidateCollection.remove(id);
+    }
+
+    private Integer getNextId() {
+        return sequentialId++;
     }
 
 }

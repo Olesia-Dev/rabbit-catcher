@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/candidates")
@@ -15,8 +15,8 @@ public class CandidateController {
     private CandidateService candidateService;
 
     @GetMapping
-    public List<String> getAllCandidates() {
-        return candidateService.getCandidateCollection();
+    public Map<Integer, String> getAllCandidates() {
+        return candidateService.getIdToCandidateCollection();
     }
 
     @PostMapping
@@ -26,9 +26,9 @@ public class CandidateController {
         return candidate;
     }
 
-    @DeleteMapping
-    public void removeFirst() {
-        candidateService.removeFirst();
+    @DeleteMapping("/{id}")
+    public void removeCandidateById(@PathVariable Integer id) {
+        candidateService.removeById(id);
     }
 
 }
