@@ -16,10 +16,9 @@ public class CandidateService {
     }
 
     private void initMockData() {
-        idToCandidateCollection.putAll(Map.of(
-                getNextId(), "Alex Bip",
-                getNextId(), "Igor Papka",
-                getNextId(), "Iryna Chek"));
+        addNewCandidate("Alex Bip");
+        addNewCandidate("Igor Papka");
+        addNewCandidate("Iryna Chek");
     }
 
     public Map<Integer, String> getIdToCandidateCollection() {
@@ -27,15 +26,11 @@ public class CandidateService {
     }
 
     public void addNewCandidate(String candidate) {
-        idToCandidateCollection.put(getNextId(), candidate);
+        idToCandidateCollection.put(sequentialId++, candidate);
     }
 
     public void removeById(Integer id) {
         idToCandidateCollection.remove(id);
-    }
-
-    private Integer getNextId() {
-        return sequentialId++;
     }
 
 }
