@@ -15,8 +15,15 @@ public class CandidateController {
     private CandidateService candidateService;
 
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     public Map<Integer, String> getAllCandidates() {
         return candidateService.getIdToCandidateCollection();
+    }
+
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public String getCandidate(@PathVariable Integer id) {
+        return candidateService.getCandidateById(id);
     }
 
     @PostMapping
@@ -27,6 +34,7 @@ public class CandidateController {
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public void removeCandidateById(@PathVariable Integer id) {
         candidateService.removeById(id);
     }

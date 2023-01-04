@@ -25,6 +25,10 @@ public class CandidateService {
         return idToCandidateCollection;
     }
 
+    public String getCandidateById(Integer id){
+        return idToCandidateCollection.get(id);
+    }
+
     public void addNewCandidate(String candidate) {
         idToCandidateCollection.put(sequentialId++, candidate);
     }
