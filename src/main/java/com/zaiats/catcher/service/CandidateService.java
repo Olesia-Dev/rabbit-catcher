@@ -25,8 +25,12 @@ public class CandidateService {
         return idToCandidateCollection;
     }
 
-    public String getCandidateById(Integer id){
+    public String getCandidateById(Integer id) {
         return idToCandidateCollection.get(id);
+    }
+
+    public String updateCandidate(Integer id, String candidate) {
+        return idToCandidateCollection.put(id, candidate);
     }
 
     public void addNewCandidate(String candidate) {

@@ -33,6 +33,13 @@ public class CandidateController {
         return candidate;
     }
 
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public String updateCandidate(@PathVariable Integer id, @RequestBody String candidate) {
+        String existingCandidate = candidateService.updateCandidate(id, candidate);
+        return existingCandidate + " -> " + candidate;
+    }
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void removeCandidateById(@PathVariable Integer id) {
