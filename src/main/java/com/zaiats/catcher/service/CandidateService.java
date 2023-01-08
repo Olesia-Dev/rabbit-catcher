@@ -1,5 +1,6 @@
 package com.zaiats.catcher.service;
 
+import com.zaiats.catcher.model.Candidate;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -9,31 +10,31 @@ import java.util.Map;
 public class CandidateService {
 
     private static Integer sequentialId = 1;
-    private static Map<Integer, String> idToCandidateCollection = new HashMap<>();
+    private static Map<Integer, Candidate> idToCandidateCollection = new HashMap<>();
 
     public CandidateService() {
         initMockData();
     }
 
     private void initMockData() {
-        addNewCandidate("Alex Bip");
-        addNewCandidate("Igor Papka");
-        addNewCandidate("Iryna Chek");
+        addNewCandidate(new Candidate("Olesia", "Kuku", "test1@mail.com"));
+        addNewCandidate(new Candidate("Alex", "Byk", "test2@mail.com"));
+        addNewCandidate(new Candidate("Nicolas", "Key", "test3@mail.com"));
     }
 
-    public Map<Integer, String> getIdToCandidateCollection() {
+    public Map<Integer, Candidate> getIdToCandidateCollection() {
         return idToCandidateCollection;
     }
 
-    public String getCandidateById(Integer id) {
+    public Candidate getCandidateById(Integer id) {
         return idToCandidateCollection.get(id);
     }
 
-    public String updateCandidate(Integer id, String candidate) {
+    public Candidate updateCandidate(Integer id, Candidate candidate) {
         return idToCandidateCollection.put(id, candidate);
     }
 
-    public void addNewCandidate(String candidate) {
+    public void addNewCandidate(Candidate candidate) {
         idToCandidateCollection.put(sequentialId++, candidate);
     }
 

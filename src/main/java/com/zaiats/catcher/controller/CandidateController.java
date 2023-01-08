@@ -1,5 +1,6 @@
 package com.zaiats.catcher.controller;
 
+import com.zaiats.catcher.model.Candidate;
 import com.zaiats.catcher.service.CandidateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,28 +17,28 @@ public class CandidateController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Map<Integer, String> getAllCandidates() {
+    public Map<Integer, Candidate> getAllCandidates() {
         return candidateService.getIdToCandidateCollection();
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public String getCandidate(@PathVariable Integer id) {
+    public Candidate getCandidate(@PathVariable Integer id) {
         return candidateService.getCandidateById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public String createCandidate(@RequestBody String candidate) {
+    public Candidate createCandidate(@RequestBody Candidate candidate) {
         candidateService.addNewCandidate(candidate);
         return candidate;
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public String updateCandidate(@PathVariable Integer id, @RequestBody String candidate) {
-        String existingCandidate = candidateService.updateCandidate(id, candidate);
-        return existingCandidate + " -> " + candidate;
+    public String updateCandidate(@PathVariable Integer id, @RequestBody Candidate candidate) {
+        Candidate existingCandidate = candidateService.updateCandidate(id, candidate);
+        return existingCandidate + "\n->\n" + candidate;
     }
 
     @DeleteMapping("/{id}")
