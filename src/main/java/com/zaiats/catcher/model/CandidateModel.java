@@ -2,16 +2,16 @@ package com.zaiats.catcher.model;
 
 import java.util.Objects;
 
-public class Candidate {
+public class CandidateModel {
 
     private String firstName;
     private String lastName;
     private String email;
 
-    public Candidate() {
+    public CandidateModel() {
     }
 
-    public Candidate(String firstName, String lastName, String email) {
+    public CandidateModel(String firstName, String lastName, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -44,10 +44,10 @@ public class Candidate {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Candidate candidate)) return false;
-        return firstName.equals(candidate.firstName)
-                && lastName.equals(candidate.lastName)
-                && email.equals(candidate.email);
+        if (!(o instanceof CandidateModel candidateModel)) return false;
+        return firstName.equals(candidateModel.firstName)
+                && lastName.equals(candidateModel.lastName)
+                && email.equals(candidateModel.email);
     }
 
     @Override
