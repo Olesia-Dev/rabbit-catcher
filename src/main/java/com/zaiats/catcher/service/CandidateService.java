@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -18,25 +19,18 @@ public class CandidateService {
     private static Integer sequentialId = 1;
     private static Map<Integer, CandidateModel> idToCandidateCollection = new HashMap<>();
 
-    public CandidateService() {
-        initMockData();
-    }
-
-    private void initMockData() {
-        addNewCandidate(new CandidateModel("Olesia", "Kuku", "test1@mail.com"));
-        addNewCandidate(new CandidateModel("Alex", "Byk", "test2@mail.com"));
-        addNewCandidate(new CandidateModel("Nicolas", "Key", "test3@mail.com"));
-    }
-
-    public Map<Integer, CandidateModel> getIdToCandidateCollection() {
-        saveCandidate(new Candidate(1, "Olesia", "Kuku", "test1@mail.com"));
-        saveCandidate(new Candidate(2, "Alex", "Byk", "test2@mail.com"));
-        saveCandidate(new Candidate(3, "Nicolas", "Key", "test3@mail.com"));
-        return idToCandidateCollection;
+    public List<CandidateModel> getAllCandidates() {
+        List<Candidate> candidates = candidateRepository.findAll();
+        List<CandidateModel> candidateModels = candidates.stream()
+                .map(CandidateModel::fromEntity)
+                .toList();
+        return candidateModels;
     }
 
     public CandidateModel getCandidateById(Integer id) {
-        return idToCandidateCollection.get(id);
+        Candidate foundCandidate = candidateRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Candidate not found!"));
+        return CandidateModel.fromEntity(foundCandidate);
     }
 
     public CandidateModel updateCandidate(Integer id, CandidateModel candidateModel) {
@@ -52,7 +46,7 @@ public class CandidateService {
     }
 
     public void removeById(Integer id) {
-        idToCandidateCollection.remove(id);
+        candidateRepository.deleteById(id);
     }
 
 }

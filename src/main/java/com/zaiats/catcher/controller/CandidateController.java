@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
+import java.util.List;
 
 @RestController
 @RequestMapping("/candidates")
@@ -17,8 +17,8 @@ public class CandidateController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Map<Integer, CandidateModel> getAllCandidates() {
-        return candidateService.getIdToCandidateCollection();
+    public List<CandidateModel> getAllCandidates() {
+        return candidateService.getAllCandidates();
     }
 
     @GetMapping("/{id}")

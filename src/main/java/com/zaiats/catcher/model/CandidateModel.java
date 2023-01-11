@@ -1,5 +1,7 @@
 package com.zaiats.catcher.model;
 
+import com.zaiats.catcher.repository.entity.Candidate;
+
 import java.util.Objects;
 
 public class CandidateModel {
@@ -15,6 +17,10 @@ public class CandidateModel {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+    }
+
+    public static CandidateModel fromEntity(Candidate candidate) {
+        return new CandidateModel(candidate.getFirstName(), candidate.getLastName(), candidate.getEmail());
     }
 
     public String getFirstName() {
