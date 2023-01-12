@@ -30,19 +30,17 @@ public class CandidateController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CandidateModel createCandidate(@RequestBody CandidateModel candidateModel) {
-        candidateService.addNewCandidate(candidateModel);
-        return candidateModel;
+        return candidateService.saveCandidate(candidateModel);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public String updateCandidate(@PathVariable Integer id, @RequestBody CandidateModel candidateModel) {
-        CandidateModel existingCandidateModel = candidateService.updateCandidate(id, candidateModel);
-        return existingCandidateModel + "\n->\n" + candidateModel;
+    public CandidateModel updateCandidate(@PathVariable Integer id, @RequestBody CandidateModel candidateModel) {
+        return candidateService.updateCandidate(id, candidateModel);
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeCandidateById(@PathVariable Integer id) {
         candidateService.removeById(id);
     }

@@ -6,18 +6,13 @@ import com.zaiats.catcher.repository.entity.Candidate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class CandidateService {
 
     @Autowired
     private CandidateRepository candidateRepository;
-
-    private static Integer sequentialId = 1;
-    private static Map<Integer, CandidateModel> idToCandidateCollection = new HashMap<>();
 
     public List<CandidateModel> getAllCandidates() {
         List<Candidate> candidates = candidateRepository.findAll();
@@ -34,15 +29,14 @@ public class CandidateService {
     }
 
     public CandidateModel updateCandidate(Integer id, CandidateModel candidateModel) {
-        return idToCandidateCollection.put(id, candidateModel);
+        Candidate candidate = CandidateModel.toEntity(candidateModel);
+        candidate.setId(id);
+        return CandidateModel.fromEntity(candidateRepository.save(candidate));
     }
 
-    public void addNewCandidate(CandidateModel candidateModel) {
-        idToCandidateCollection.put(sequentialId++, candidateModel);
-    }
-
-    public void saveCandidate(Candidate candidate) {
-        candidateRepository.save(candidate);
+    public CandidateModel saveCandidate(CandidateModel candidateModel) {
+        Candidate candidate = CandidateModel.toEntity(candidateModel);
+        return CandidateModel.fromEntity(candidateRepository.save(candidate));
     }
 
     public void removeById(Integer id) {
