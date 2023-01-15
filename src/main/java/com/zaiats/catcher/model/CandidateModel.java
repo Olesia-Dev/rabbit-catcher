@@ -6,7 +6,7 @@ import java.util.Objects;
 
 public class CandidateModel {
 
-    private Integer id;
+    private Long id;
     private String firstName;
     private String lastName;
     private String email;
@@ -14,7 +14,7 @@ public class CandidateModel {
     public CandidateModel() {
     }
 
-    public CandidateModel(Integer id, String firstName, String lastName, String email) {
+    public CandidateModel(Long id, String firstName, String lastName, String email) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -36,11 +36,11 @@ public class CandidateModel {
         return candidate;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

@@ -23,7 +23,7 @@ public class CandidateController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public CandidateModel getCandidate(@PathVariable Integer id) {
+    public CandidateModel getCandidate(@PathVariable Long id) {
         return candidateService.getCandidateById(id);
     }
 
@@ -35,13 +35,13 @@ public class CandidateController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public CandidateModel updateCandidate(@PathVariable Integer id, @RequestBody CandidateModel candidateModel) {
+    public CandidateModel updateCandidate(@PathVariable Long id, @RequestBody CandidateModel candidateModel) {
         return candidateService.updateCandidate(id, candidateModel);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removeCandidateById(@PathVariable Integer id) {
+    public void removeCandidateById(@PathVariable Long id) {
         candidateService.removeById(id);
     }
 

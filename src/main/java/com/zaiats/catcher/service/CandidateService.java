@@ -22,13 +22,13 @@ public class CandidateService {
         return candidateModels;
     }
 
-    public CandidateModel getCandidateById(Integer id) {
+    public CandidateModel getCandidateById(Long id) {
         Candidate foundCandidate = candidateRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Candidate not found!"));
         return CandidateModel.fromEntity(foundCandidate);
     }
 
-    public CandidateModel updateCandidate(Integer id, CandidateModel candidateModel) {
+    public CandidateModel updateCandidate(Long id, CandidateModel candidateModel) {
         Candidate candidate = CandidateModel.toEntity(candidateModel);
         candidate.setId(id);
         return CandidateModel.fromEntity(candidateRepository.save(candidate));
@@ -39,7 +39,7 @@ public class CandidateService {
         return CandidateModel.fromEntity(candidateRepository.save(candidate));
     }
 
-    public void removeById(Integer id) {
+    public void removeById(Long id) {
         candidateRepository.deleteById(id);
     }
 

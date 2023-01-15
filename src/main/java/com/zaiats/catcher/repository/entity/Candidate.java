@@ -1,14 +1,15 @@
 package com.zaiats.catcher.repository.entity;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "candidate")
 public class Candidate {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String firstName;
     private String lastName;
     private String email;
@@ -16,18 +17,18 @@ public class Candidate {
     public Candidate() {
     }
 
-    public Candidate(Integer id, String firstName, String lastName, String email) {
+    public Candidate(Long id, String firstName, String lastName, String email) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -53,6 +54,21 @@ public class Candidate {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Candidate candidate)) return false;
+        return Objects.equals(id, candidate.id)
+                && Objects.equals(firstName, candidate.firstName)
+                && Objects.equals(lastName, candidate.lastName)
+                && Objects.equals(email, candidate.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, firstName, lastName, email);
     }
 
 }
