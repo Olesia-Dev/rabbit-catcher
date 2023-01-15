@@ -13,15 +13,17 @@ public class Candidate {
     private String firstName;
     private String lastName;
     private String email;
+    private String currentPosition;
 
     public Candidate() {
     }
 
-    public Candidate(Long id, String firstName, String lastName, String email) {
+    public Candidate(Long id, String firstName, String lastName, String email, String currentPosition) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.currentPosition = currentPosition;
     }
 
     public Long getId() {
@@ -56,6 +58,14 @@ public class Candidate {
         this.email = email;
     }
 
+    public String getCurrentPosition() {
+        return currentPosition;
+    }
+
+    public void setCurrentPosition(String currentPosition) {
+        this.currentPosition = currentPosition;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -63,12 +73,13 @@ public class Candidate {
         return Objects.equals(id, candidate.id)
                 && Objects.equals(firstName, candidate.firstName)
                 && Objects.equals(lastName, candidate.lastName)
-                && Objects.equals(email, candidate.email);
+                && Objects.equals(email, candidate.email)
+                && Objects.equals(currentPosition, candidate.currentPosition);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, email);
+        return Objects.hash(id, firstName, lastName, email, currentPosition);
     }
 
 }
