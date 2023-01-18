@@ -1,5 +1,6 @@
 package com.zaiats.catcher.service;
 
+import com.zaiats.catcher.exception.ResourceNotFoundException;
 import com.zaiats.catcher.model.CandidateModel;
 import com.zaiats.catcher.repository.CandidateRepository;
 import com.zaiats.catcher.repository.entity.Candidate;
@@ -24,7 +25,7 @@ public class CandidateService {
 
     public CandidateModel getCandidateById(Long id) {
         Candidate foundCandidate = candidateRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Candidate not found!"));
+                .orElseThrow(() -> new ResourceNotFoundException("Candidate with ID: " + id + " not found!"));
         return CandidateModel.fromEntity(foundCandidate);
     }
 
