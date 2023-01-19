@@ -2,14 +2,27 @@ package com.zaiats.catcher.model;
 
 import com.zaiats.catcher.repository.entity.Candidate;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.Objects;
 
 public class CandidateModel {
 
     private Long id;
+
+    @NotBlank
+    @Size(max = 64)
     private String firstName;
+
+    @NotBlank
+    @Size(max = 64)
     private String lastName;
+
+    @Email
     private String email;
+
+    @Size(max = 256)
     private String currentPosition;
 
     public CandidateModel() {
