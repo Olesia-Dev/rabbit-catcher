@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -29,13 +30,14 @@ public class CandidateController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CandidateModel createCandidate(@RequestBody CandidateModel candidateModel) {
+    public CandidateModel createCandidate(@RequestBody @Valid CandidateModel candidateModel) {
         return candidateService.saveCandidate(candidateModel);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public CandidateModel updateCandidate(@PathVariable Long id, @RequestBody CandidateModel candidateModel) {
+    public CandidateModel updateCandidate(@PathVariable Long id,
+                                          @RequestBody @Valid CandidateModel candidateModel) {
         return candidateService.updateCandidate(id, candidateModel);
     }
 
