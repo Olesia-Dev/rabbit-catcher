@@ -11,18 +11,19 @@ public class CandidateModel {
 
     private Long id;
 
-    @NotBlank
-    @Size(max = 64)
+    @NotBlank(message = "{candidate.firstName.notBlank}")
+    @Size(max = 64, message = "{candidate.firstName.size}")
     private String firstName;
 
-    @NotBlank
-    @Size(max = 64)
+    @NotBlank(message = "{candidate.lastName.notBlank}")
+    @Size(max = 64, message = "{candidate.lastName.size}")
     private String lastName;
 
-    @Email
+    @NotBlank(message = "{candidate.email.notBlank}")
+    @Email(message = "{candidate.email.invalid}")
     private String email;
 
-    @Size(max = 256)
+    @Size(max = 256, message = "{candidate.currentPosition.size}")
     private String currentPosition;
 
     public CandidateModel() {
