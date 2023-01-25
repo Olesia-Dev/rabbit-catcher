@@ -33,12 +33,12 @@ class CandidateControllerTest {
     @MockBean
     private CandidateService candidateService;
 
+    private CandidateModel candidateModel = new CandidateModel(
+            20230122222130L, "Alex", "Bip", "alex.bip@mail.com", "Developer");
+
     @Test
     void getAllCandidates_returns200() throws Exception {
-        CandidateModel candidateModel = new CandidateModel(
-                20230122222130L, "Alex", "Bip", "alex.bip@mail.com", "Developer");
         when(candidateService.getAllCandidates()).thenReturn(List.of(candidateModel));
-
         MvcResult mvcResult = mockMvc.perform(get("/candidates")
                         .contentType("application/json"))
                 .andExpect(status().isOk())
@@ -49,9 +49,17 @@ class CandidateControllerTest {
         assertEquals(expectedResponseBody, actualResponseBody);
     }
 
-    @Disabled // TODO
     @Test
-    void getCandidate() {
+    void getCandidate_returns200() throws Exception {
+        when(candidateService.getCandidateById(20230122222130L)).thenReturn(candidateModel);
+        MvcResult mvcResult = mockMvc.perform(get("/candidates/20230122222130")
+                        .contentType("application/json"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String expectedResponseBody = objectMapper.writeValueAsString(candidateModel);
+        String actualResponseBody = mvcResult.getResponse().getContentAsString();
+        assertEquals(expectedResponseBody, actualResponseBody);
     }
 
     @Disabled // TODO
