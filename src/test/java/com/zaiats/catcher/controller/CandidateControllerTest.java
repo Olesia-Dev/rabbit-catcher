@@ -9,6 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -16,8 +17,9 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
@@ -40,7 +42,7 @@ class CandidateControllerTest {
     void getAllCandidates_returns200() throws Exception {
         when(candidateService.getAllCandidates()).thenReturn(List.of(candidateModel));
         MvcResult mvcResult = mockMvc.perform(get("/candidates")
-                        .contentType("application/json"))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -53,7 +55,7 @@ class CandidateControllerTest {
     void getCandidate_returns200() throws Exception {
         when(candidateService.getCandidateById(20230122222130L)).thenReturn(candidateModel);
         MvcResult mvcResult = mockMvc.perform(get("/candidates/20230122222130")
-                        .contentType("application/json"))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -62,14 +64,34 @@ class CandidateControllerTest {
         assertEquals(expectedResponseBody, actualResponseBody);
     }
 
-    @Disabled // TODO
     @Test
-    void createCandidate() {
+    void createCandidate_returns201() throws Exception {
+        when(candidateService.saveCandidate(isA(CandidateModel.class)))
+                .thenReturn(candidateModel);
+
+        mockMvc.perform(post("/candidates")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(candidateModel)))
+                .andExpect(status().isCreated())
+                .andExpect(content().string(objectMapper.writeValueAsString(candidateModel)))
+                .andReturn();
+
+        verify(candidateService).saveCandidate(candidateModel);
     }
 
-    @Disabled // TODO
     @Test
-    void updateCandidate() {
+    void updateCandidate_returns200() throws Exception {
+        when(candidateService.updateCandidate(20230122222130L, candidateModel))
+                .thenReturn(candidateModel);
+
+        mockMvc.perform(put("/candidates/20230122222130")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(candidateModel)))
+                .andExpect(status().isOk())
+                .andExpect(content().string(objectMapper.writeValueAsString(candidateModel)))
+                .andReturn();
+
+        verify(candidateService).updateCandidate(20230122222130L, candidateModel);
     }
 
     @Disabled // TODO
