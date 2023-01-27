@@ -30,14 +30,16 @@ class CandidateControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private CandidateService candidateService;
+    private CandidateService mockCandidateService;
+
+    private final Long candidateId = 20230122222130L;
 
     private final CandidateModel candidateModel = new CandidateModel(
-            20230122222130L, "Alex", "Bip", "alex.bip@mail.com", "Developer");
+            candidateId, "Alex", "Bip", "alex.bip@mail.com", "Developer");
 
     @Test
     void getAllCandidates_returns200() throws Exception {
-        when(candidateService.getAllCandidates())
+        when(mockCandidateService.getAllCandidates())
                 .thenReturn(List.of(candidateModel));
 
         mockMvc.perform(get("/candidates")
@@ -47,26 +49,26 @@ class CandidateControllerTest {
                         objectMapper.writeValueAsString(List.of(candidateModel))))
                 .andReturn();
 
-        verify(candidateService).getAllCandidates();
+        verify(mockCandidateService).getAllCandidates();
     }
 
     @Test
     void getCandidate_returns200() throws Exception {
-        when(candidateService.getCandidateById(20230122222130L))
+        when(mockCandidateService.getCandidateById(candidateId))
                 .thenReturn(candidateModel);
 
-        mockMvc.perform(get("/candidates/{id}", 20230122222130L)
+        mockMvc.perform(get("/candidates/{id}", candidateId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(candidateModel)))
                 .andReturn();
 
-        verify(candidateService).getCandidateById(20230122222130L);
+        verify(mockCandidateService).getCandidateById(candidateId);
     }
 
     @Test
     void createCandidate_returns201() throws Exception {
-        when(candidateService.saveCandidate(isA(CandidateModel.class)))
+        when(mockCandidateService.saveCandidate(isA(CandidateModel.class)))
                 .thenReturn(candidateModel);
 
         mockMvc.perform(post("/candidates")
@@ -76,32 +78,32 @@ class CandidateControllerTest {
                 .andExpect(content().string(objectMapper.writeValueAsString(candidateModel)))
                 .andReturn();
 
-        verify(candidateService).saveCandidate(candidateModel);
+        verify(mockCandidateService).saveCandidate(candidateModel);
     }
 
     @Test
     void updateCandidate_returns200() throws Exception {
-        when(candidateService.updateCandidate(20230122222130L, candidateModel))
+        when(mockCandidateService.updateCandidate(candidateId, candidateModel))
                 .thenReturn(candidateModel);
 
-        mockMvc.perform(put("/candidates/{id}", 20230122222130L)
+        mockMvc.perform(put("/candidates/{id}", candidateId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(candidateModel)))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(candidateModel)))
                 .andReturn();
 
-        verify(candidateService).updateCandidate(20230122222130L, candidateModel);
+        verify(mockCandidateService).updateCandidate(candidateId, candidateModel);
     }
 
     @Test
     void removeCandidateById_returns204() throws Exception {
-        mockMvc.perform(delete("/candidates/{id}", 20230122222130L)
+        mockMvc.perform(delete("/candidates/{id}", candidateId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent())
                 .andReturn();
 
-        verify(candidateService).removeById(20230122222130L);
+        verify(mockCandidateService).removeById(candidateId);
     }
     
 }
