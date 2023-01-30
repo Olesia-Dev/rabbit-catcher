@@ -14,10 +14,11 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = CandidateController.class)
@@ -105,5 +106,35 @@ class CandidateControllerTest {
 
         verify(mockCandidateService).removeById(candidateId);
     }
-    
+
+    @Test
+    void removeCandidateById_zeroId_returns400() throws Exception {
+        mockMvc.perform(delete("/candidates/{id}", 0)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", containsString("id: must be greater")));
+
+        verifyNoInteractions(mockCandidateService);
+    }
+
+    @Test
+    void removeCandidateById_negativeId_returns400() throws Exception {
+        mockMvc.perform(delete("/candidates/{id}", -1)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", containsString("id: must be greater")));
+
+        verifyNoInteractions(mockCandidateService);
+    }
+
+    @Test
+    void removeCandidateById_invalidIdType_returns400() throws Exception {
+        mockMvc.perform(delete("/candidates/{id}", 'a')
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", is("For input string: \"a\"")));
+
+        verifyNoInteractions(mockCandidateService);
+    }
+
 }

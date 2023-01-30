@@ -6,6 +6,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import javax.validation.ConstraintViolationException;
 import java.time.Instant;
 import java.util.Objects;
 
@@ -25,6 +26,22 @@ public class ApiExceptionHandler {
         ApiException apiException = new ApiException(Instant.now(),
                 HttpStatus.BAD_REQUEST,
                 Objects.requireNonNull(e.getFieldError()).getDefaultMessage());
+        return new ResponseEntity<>(apiException, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = ConstraintViolationException.class)
+    public ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException e) {
+        ApiException apiException = new ApiException(Instant.now(),
+                HttpStatus.BAD_REQUEST,
+                e.getMessage());
+        return new ResponseEntity<>(apiException, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = IllegalArgumentException.class)
+    public ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException e) {
+        ApiException apiException = new ApiException(Instant.now(),
+                HttpStatus.BAD_REQUEST,
+                e.getMessage());
         return new ResponseEntity<>(apiException, HttpStatus.BAD_REQUEST);
     }
 

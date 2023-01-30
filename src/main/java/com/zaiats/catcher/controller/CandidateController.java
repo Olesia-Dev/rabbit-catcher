@@ -4,11 +4,14 @@ import com.zaiats.catcher.model.CandidateModel;
 import com.zaiats.catcher.service.CandidateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import java.util.List;
 
+@Validated
 @RestController
 @RequestMapping("/candidates")
 public class CandidateController {
@@ -43,7 +46,7 @@ public class CandidateController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removeCandidateById(@PathVariable Long id) {
+    public void removeCandidateById(@PathVariable @Min(1) Long id) {
         candidateService.removeById(id);
     }
 
