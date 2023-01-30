@@ -27,7 +27,7 @@ public class CandidateController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public CandidateModel getCandidate(@PathVariable Long id) {
+    public CandidateModel getCandidate(@PathVariable @Min(1) Long id) {
         return candidateService.getCandidateById(id);
     }
 
