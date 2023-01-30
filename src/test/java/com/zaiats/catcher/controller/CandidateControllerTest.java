@@ -68,6 +68,36 @@ class CandidateControllerTest {
     }
 
     @Test
+    void getCandidateById_zeroId_returns400() throws Exception {
+        mockMvc.perform(get("/candidates/{id}", 0)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", containsString("id: must be greater")));
+
+        verifyNoInteractions(mockCandidateService);
+    }
+
+    @Test
+    void getCandidateById_negativeId_returns400() throws Exception {
+        mockMvc.perform(get("/candidates/{id}", -1)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", containsString("id: must be greater")));
+
+        verifyNoInteractions(mockCandidateService);
+    }
+
+    @Test
+    void getCandidateById_invalidIdType_returns400() throws Exception {
+        mockMvc.perform(get("/candidates/{id}", 'a')
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", is("For input string: \"a\"")));
+
+        verifyNoInteractions(mockCandidateService);
+    }
+
+    @Test
     void createCandidate_returns201() throws Exception {
         when(mockCandidateService.saveCandidate(isA(CandidateModel.class)))
                 .thenReturn(candidateModel);
