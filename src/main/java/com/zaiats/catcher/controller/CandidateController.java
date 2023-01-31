@@ -39,7 +39,7 @@ public class CandidateController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public CandidateModel updateCandidate(@PathVariable Long id,
+    public CandidateModel updateCandidate(@PathVariable @Min(1) Long id,
                                           @RequestBody @Valid CandidateModel candidateModel) {
         return candidateService.updateCandidate(id, candidateModel);
     }

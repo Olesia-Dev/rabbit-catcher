@@ -128,6 +128,39 @@ class CandidateControllerTest {
     }
 
     @Test
+    void updateCandidate_zeroId_returns400() throws Exception {
+        mockMvc.perform(put("/candidates/{id}", 0)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(candidateModel)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", containsString("id: must be greater")));
+
+        verifyNoInteractions(mockCandidateService);
+    }
+
+    @Test
+    void updateCandidate_negativeId_returns400() throws Exception {
+        mockMvc.perform(put("/candidates/{id}", -1)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(candidateModel)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", containsString("id: must be greater")));
+
+        verifyNoInteractions(mockCandidateService);
+    }
+
+    @Test
+    void updateCandidate_invalidIdType_returns400() throws Exception {
+        mockMvc.perform(put("/candidates/{id}", 'a')
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(candidateModel)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", is("For input string: \"a\"")));
+
+        verifyNoInteractions(mockCandidateService);
+    }
+
+    @Test
     void removeCandidateById_returns204() throws Exception {
         mockMvc.perform(delete("/candidates/{id}", candidateId)
                         .contentType(MediaType.APPLICATION_JSON))
