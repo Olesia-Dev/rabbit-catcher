@@ -113,6 +113,71 @@ class CandidateControllerTest {
     }
 
     @Test
+    void createCandidate_requiredDataOnly_returns201() throws Exception {
+        CandidateModel minimalCandidateModel = new CandidateModel();
+        minimalCandidateModel.setFirstName("Stepan");
+        minimalCandidateModel.setLastName("Dudka");
+        minimalCandidateModel.setEmail("stepan.dudka@mail.com");
+
+        when(mockCandidateService.saveCandidate(isA(CandidateModel.class)))
+                .thenReturn(minimalCandidateModel);
+
+        mockMvc.perform(post("/candidates")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(minimalCandidateModel)))
+                .andExpect(status().isCreated())
+                .andExpect(content().string(objectMapper.writeValueAsString(minimalCandidateModel)))
+                .andReturn();
+
+        verify(mockCandidateService).saveCandidate(minimalCandidateModel);
+    }
+
+    @Test
+    void createCandidate_firstNameIsAbsent_returns400() throws Exception {
+        CandidateModel minimalCandidateModel = new CandidateModel();
+        minimalCandidateModel.setLastName("Dudka");
+        minimalCandidateModel.setEmail("stepan.dudka@mail.com");
+
+        mockMvc.perform(post("/candidates")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(minimalCandidateModel)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", containsString("First name can't be empty.")));
+
+        verifyNoInteractions(mockCandidateService);
+    }
+
+    @Test
+    void createCandidate_lastNameIsAbsent_returns400() throws Exception {
+        CandidateModel minimalCandidateModel = new CandidateModel();
+        minimalCandidateModel.setFirstName("Stepan");
+        minimalCandidateModel.setEmail("stepan.dudka@mail.com");
+
+        mockMvc.perform(post("/candidates")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(minimalCandidateModel)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", containsString("Last name can't be empty.")));
+
+        verifyNoInteractions(mockCandidateService);
+    }
+
+    @Test
+    void createCandidate_emailIsAbsent_returns400() throws Exception {
+        CandidateModel minimalCandidateModel = new CandidateModel();
+        minimalCandidateModel.setFirstName("Stepan");
+        minimalCandidateModel.setLastName("Dudka");
+
+        mockMvc.perform(post("/candidates")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(minimalCandidateModel)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", containsString("Email can't be empty.")));
+
+        verifyNoInteractions(mockCandidateService);
+    }
+
+    @Test
     void updateCandidate_returns200() throws Exception {
         when(mockCandidateService.updateCandidate(candidateId, candidateModel))
                 .thenReturn(candidateModel);
