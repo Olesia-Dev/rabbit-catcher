@@ -114,10 +114,7 @@ class CandidateControllerTest {
 
     @Test
     void createCandidate_requiredDataOnly_returns201() throws Exception {
-        CandidateModel minimalCandidateModel = new CandidateModel();
-        minimalCandidateModel.setFirstName("Stepan");
-        minimalCandidateModel.setLastName("Dudka");
-        minimalCandidateModel.setEmail("stepan.dudka@mail.com");
+        CandidateModel minimalCandidateModel = getMinimalCandidateModel();
 
         when(mockCandidateService.saveCandidate(isA(CandidateModel.class)))
                 .thenReturn(minimalCandidateModel);
@@ -134,13 +131,12 @@ class CandidateControllerTest {
 
     @Test
     void createCandidate_firstNameIsAbsent_returns400() throws Exception {
-        CandidateModel minimalCandidateModel = new CandidateModel();
-        minimalCandidateModel.setLastName("Dudka");
-        minimalCandidateModel.setEmail("stepan.dudka@mail.com");
+        CandidateModel noFirstNameCandidate = getMinimalCandidateModel();
+        noFirstNameCandidate.setFirstName(null);
 
         mockMvc.perform(post("/candidates")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(minimalCandidateModel)))
+                        .content(objectMapper.writeValueAsString(noFirstNameCandidate)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message", containsString("First name can't be empty.")));
 
@@ -149,13 +145,12 @@ class CandidateControllerTest {
 
     @Test
     void createCandidate_lastNameIsAbsent_returns400() throws Exception {
-        CandidateModel minimalCandidateModel = new CandidateModel();
-        minimalCandidateModel.setFirstName("Stepan");
-        minimalCandidateModel.setEmail("stepan.dudka@mail.com");
+        CandidateModel noLastNameCandidate = getMinimalCandidateModel();
+        noLastNameCandidate.setLastName(null);
 
         mockMvc.perform(post("/candidates")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(minimalCandidateModel)))
+                        .content(objectMapper.writeValueAsString(noLastNameCandidate)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message", containsString("Last name can't be empty.")));
 
@@ -164,15 +159,78 @@ class CandidateControllerTest {
 
     @Test
     void createCandidate_emailIsAbsent_returns400() throws Exception {
-        CandidateModel minimalCandidateModel = new CandidateModel();
-        minimalCandidateModel.setFirstName("Stepan");
-        minimalCandidateModel.setLastName("Dudka");
+        CandidateModel noEmailCandidate = getMinimalCandidateModel();
+        noEmailCandidate.setEmail(null);
 
         mockMvc.perform(post("/candidates")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(minimalCandidateModel)))
+                        .content(objectMapper.writeValueAsString(noEmailCandidate)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message", containsString("Email can't be empty.")));
+
+        verifyNoInteractions(mockCandidateService);
+    }
+
+    @Test
+    void createCandidate_firstNameIsTooLong_returns400() throws Exception {
+        CandidateModel longFirstNameCandidate = getMinimalCandidateModel();
+        longFirstNameCandidate.setFirstName(
+                "Stepan is very polite boy, but he doesn't have to have more than sixty four characters");
+
+        mockMvc.perform(post("/candidates")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(longFirstNameCandidate)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message",
+                        containsString("First name should be no longer than 64 characters.")));
+
+        verifyNoInteractions(mockCandidateService);
+    }
+
+    @Test
+    void createCandidate_lastNameIsTooLong_returns400() throws Exception {
+        CandidateModel longLastNameCandidate = getMinimalCandidateModel();
+        longLastNameCandidate.setLastName(
+                "Dudka is very polite boy, but he doesn't have to have more than sixty four characters");
+
+        mockMvc.perform(post("/candidates")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(longLastNameCandidate)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message",
+                        containsString("Last name should be no longer than 64 characters.")));
+
+        verifyNoInteractions(mockCandidateService);
+    }
+
+    @Test
+    void createCandidate_emailIsInvalid_returns400() throws Exception {
+        CandidateModel invalidEmailCandidate = getMinimalCandidateModel();
+        invalidEmailCandidate.setEmail("invalid.email");
+
+        mockMvc.perform(post("/candidates")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(invalidEmailCandidate)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", containsString("Email is invalid.")));
+
+        verifyNoInteractions(mockCandidateService);
+    }
+
+    @Test
+    void createCandidate_tooLongCurrentPosition_returns400() throws Exception {
+        CandidateModel tooLongCurrentPositionCandidate = getMinimalCandidateModel();
+        tooLongCurrentPositionCandidate.setCurrentPosition("Candidate with very long current position that is" +
+                " actually have no value to me, but I need to test this oversized position title. Stepan Dudka is " +
+                "very polite, but I don't know him. I want to know more about his current position for our new" +
+                " opportunity. I'm waiting for his current position.");
+
+        mockMvc.perform(post("/candidates")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(tooLongCurrentPositionCandidate)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message",
+                        containsString("Current position title should be no longer than 256 characters.")));
 
         verifyNoInteractions(mockCandidateService);
     }
@@ -263,6 +321,14 @@ class CandidateControllerTest {
                 .andExpect(jsonPath("$.message", is("For input string: \"a\"")));
 
         verifyNoInteractions(mockCandidateService);
+    }
+
+    private CandidateModel getMinimalCandidateModel() {
+        CandidateModel minimalCandidateModel = new CandidateModel();
+        minimalCandidateModel.setFirstName("Stepan");
+        minimalCandidateModel.setLastName("Dudka");
+        minimalCandidateModel.setEmail("stepan.dudka@mail.com");
+        return minimalCandidateModel;
     }
 
 }
