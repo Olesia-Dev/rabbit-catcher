@@ -1,47 +1,19 @@
 package com.zaiats.catcher.service;
 
-import com.zaiats.catcher.exception.ResourceNotFoundException;
 import com.zaiats.catcher.model.CandidateModel;
-import com.zaiats.catcher.repository.CandidateRepository;
-import com.zaiats.catcher.repository.entity.Candidate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
-public class CandidateService {
+public interface CandidateService {
 
-    @Autowired
-    private CandidateRepository candidateRepository;
+    List<CandidateModel> getAllCandidates();
 
-    public List<CandidateModel> getAllCandidates() {
-        List<Candidate> candidates = candidateRepository.findAll();
-        List<CandidateModel> candidateModels = candidates.stream()
-                .map(CandidateModel::fromEntity)
-                .toList();
-        return candidateModels;
-    }
+    CandidateModel getCandidateById(Long id);
 
-    public CandidateModel getCandidateById(Long id) {
-        Candidate foundCandidate = candidateRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Candidate with ID: " + id + " not found!"));
-        return CandidateModel.fromEntity(foundCandidate);
-    }
+    CandidateModel updateCandidate(Long id, CandidateModel candidateModel);
 
-    public CandidateModel updateCandidate(Long id, CandidateModel candidateModel) {
-        Candidate candidate = CandidateModel.toEntity(candidateModel);
-        candidate.setId(id);
-        return CandidateModel.fromEntity(candidateRepository.save(candidate));
-    }
+    CandidateModel saveCandidate(CandidateModel candidateModel);
 
-    public CandidateModel saveCandidate(CandidateModel candidateModel) {
-        Candidate candidate = CandidateModel.toEntity(candidateModel);
-        return CandidateModel.fromEntity(candidateRepository.save(candidate));
-    }
-
-    public void removeById(Long id) {
-        candidateRepository.deleteById(id);
-    }
+    void removeById(Long id);
 
 }
