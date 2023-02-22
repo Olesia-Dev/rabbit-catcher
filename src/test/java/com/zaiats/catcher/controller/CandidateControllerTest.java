@@ -34,9 +34,8 @@ class CandidateControllerTest {
     private CandidateService mockCandidateService;
 
     private final Long candidateId = 20230122222130L;
-
-    private final CandidateModel candidateModel = new CandidateModel(
-            candidateId, "Alex", "Bip", "alex.bip@mail.com", "Developer");
+    private final CandidateModel candidateModel = createCandidateModelWithCustomId(candidateId);
+    private final CandidateModel candidateModelNoId = createCandidateModelWithCustomId(null);
 
     @Test
     void getAllCandidates_returns200() throws Exception {
@@ -109,7 +108,7 @@ class CandidateControllerTest {
                 .andExpect(content().string(objectMapper.writeValueAsString(candidateModel)))
                 .andReturn();
 
-        verify(mockCandidateService).saveCandidate(candidateModel);
+        verify(mockCandidateService).saveCandidate(candidateModelNoId);
     }
 
     @Test
@@ -237,7 +236,7 @@ class CandidateControllerTest {
 
     @Test
     void updateCandidate_returns200() throws Exception {
-        when(mockCandidateService.updateCandidate(candidateId, candidateModel))
+        when(mockCandidateService.updateCandidate(candidateId, candidateModelNoId))
                 .thenReturn(candidateModel);
 
         mockMvc.perform(put("/candidates/{id}", candidateId)
@@ -247,7 +246,7 @@ class CandidateControllerTest {
                 .andExpect(content().string(objectMapper.writeValueAsString(candidateModel)))
                 .andReturn();
 
-        verify(mockCandidateService).updateCandidate(candidateId, candidateModel);
+        verify(mockCandidateService).updateCandidate(candidateId, candidateModelNoId);
     }
 
     @Test
@@ -329,6 +328,10 @@ class CandidateControllerTest {
         minimalCandidateModel.setLastName("Dudka");
         minimalCandidateModel.setEmail("stepan.dudka@mail.com");
         return minimalCandidateModel;
+    }
+
+    private CandidateModel createCandidateModelWithCustomId(Long id) {
+        return new CandidateModel(id, "Alex", "Bip", "alex.bip@mail.com", "Developer");
     }
 
 }

@@ -1,5 +1,6 @@
 package com.zaiats.catcher.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.zaiats.catcher.repository.entity.Candidate;
 
 import javax.validation.constraints.Email;
@@ -7,8 +8,11 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.Objects;
 
+import static com.fasterxml.jackson.annotation.JsonProperty.Access.READ_ONLY;
+
 public class CandidateModel {
 
+    @JsonProperty(access = READ_ONLY)
     private Long id;
 
     @NotBlank(message = "{candidate.firstName.notBlank}")
