@@ -48,4 +48,11 @@ public class CandidateServiceImpl implements CandidateService {
         candidateRepository.deleteById(id);
     }
 
+    @Override
+    public CandidateModel searchByEmail(String email) {
+        Candidate candidate = candidateRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Candidate with email: " + email + " not found!"));
+        return CandidateModel.fromEntity(candidate);
+    }
+
 }

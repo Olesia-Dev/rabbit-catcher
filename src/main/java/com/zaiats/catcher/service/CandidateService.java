@@ -16,4 +16,6 @@ public interface CandidateService {
 
     void removeById(Long id);
 
+    CandidateModel searchByEmail(String email);
+
 }
