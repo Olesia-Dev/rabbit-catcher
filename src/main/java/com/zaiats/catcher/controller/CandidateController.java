@@ -8,6 +8,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
 import java.util.List;
 
@@ -48,6 +49,12 @@ public class CandidateController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeCandidateById(@PathVariable @Min(1) Long id) {
         candidateService.removeById(id);
+    }
+
+    @GetMapping("/search/{email}")
+    @ResponseStatus(HttpStatus.OK)
+    public CandidateModel searchByEmail(@PathVariable @Email String email) {
+        return candidateService.searchByEmail(email);
     }
 
 }

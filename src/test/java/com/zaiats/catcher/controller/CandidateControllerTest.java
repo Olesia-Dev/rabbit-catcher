@@ -1,6 +1,7 @@
 package com.zaiats.catcher.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zaiats.catcher.exception.ResourceNotFoundException;
 import com.zaiats.catcher.model.CandidateModel;
 import com.zaiats.catcher.service.CandidateService;
 import org.junit.jupiter.api.Test;
@@ -320,6 +321,43 @@ class CandidateControllerTest {
                 .andExpect(jsonPath("$.message", is("For input string: \"a\"")));
 
         verifyNoInteractions(mockCandidateService);
+    }
+
+    @Test
+    void searchByEmail_returns200() throws Exception {
+        when(mockCandidateService.searchByEmail(anyString()))
+                .thenReturn(candidateModel);
+
+        mockMvc.perform(get("/candidates/search/{email}", "test.mail@email.com")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(objectMapper.writeValueAsString(candidateModel)))
+                .andReturn();
+
+        verify(mockCandidateService).searchByEmail("test.mail@email.com");
+    }
+
+    @Test
+    void searchByEmail_invalidEmail_returns400() throws Exception {
+        mockMvc.perform(get("/candidates/search/{email}", "invalid.email")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", is("searchByEmail.email: must be a well-formed email address")));
+
+        verifyNoInteractions(mockCandidateService);
+    }
+
+    @Test
+    void searchByEmail_userNotFound_returns404() throws Exception {
+        when(mockCandidateService.searchByEmail(anyString()))
+                .thenThrow(new ResourceNotFoundException("Email is not in the system!"));
+
+        mockMvc.perform(get("/candidates/search/{email}", "test.mail@email.com")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message", is("Email is not in the system!")));
+
+        verify(mockCandidateService).searchByEmail("test.mail@email.com");
     }
 
     private CandidateModel getMinimalCandidateModel() {
