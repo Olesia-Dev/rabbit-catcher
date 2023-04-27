@@ -98,6 +98,19 @@ class CandidateControllerTest {
     }
 
     @Test
+    void getCandidateById_userNotFound_returns404() throws Exception {
+        when(mockCandidateService.getCandidateById(anyLong()))
+                .thenThrow(new ResourceNotFoundException("Id is not in the system!"));
+
+        mockMvc.perform(get("/candidates/{id}", candidateId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message", is("Id is not in the system!")));
+
+        verify(mockCandidateService).getCandidateById(candidateId);
+    }
+
+    @Test
     void createCandidate_returns201() throws Exception {
         when(mockCandidateService.saveCandidate(isA(CandidateModel.class)))
                 .thenReturn(candidateModel);
